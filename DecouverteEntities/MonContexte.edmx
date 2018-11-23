@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="KartinaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Photo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Titre" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Description" Type="varchar(max)" />
+          <Property Name="IDVendeur" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PhotoTag">
+          <Key>
+            <PropertyRef Name="IDPhoto" />
+            <PropertyRef Name="IDTag" />
+          </Key>
+          <Property Name="IDPhoto" Type="int" Nullable="false" />
+          <Property Name="IDTag" Type="int" Nullable="false" />
+          <Property Name="DateCreation" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tag">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Titre" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Vendeur">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <Association Name="FK_Photo_Vendeur">
+          <End Role="Vendeur" Type="Self.Vendeur" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Photo" Type="Self.Photo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vendeur">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Photo">
+              <PropertyRef Name="IDVendeur" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PhotoTag_Photo">
+          <End Role="Photo" Type="Self.Photo" Multiplicity="1" />
+          <End Role="PhotoTag" Type="Self.PhotoTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Photo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PhotoTag">
+              <PropertyRef Name="IDPhoto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PhotoTag_Tag">
+          <End Role="Tag" Type="Self.Tag" Multiplicity="1" />
+          <End Role="PhotoTag" Type="Self.PhotoTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tag">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PhotoTag">
+              <PropertyRef Name="IDTag" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="KartinaModelStoreContainer">
+          <EntitySet Name="Photo" EntityType="Self.Photo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PhotoTag" EntityType="Self.PhotoTag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tag" EntityType="Self.Tag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vendeur" EntityType="Self.Vendeur" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Photo_Vendeur" Association="Self.FK_Photo_Vendeur">
+            <End Role="Vendeur" EntitySet="Vendeur" />
+            <End Role="Photo" EntitySet="Photo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PhotoTag_Photo" Association="Self.FK_PhotoTag_Photo">
+            <End Role="Photo" EntitySet="Photo" />
+            <End Role="PhotoTag" EntitySet="PhotoTag" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PhotoTag_Tag" Association="Self.FK_PhotoTag_Tag">
+            <End Role="Tag" EntitySet="Tag" />
+            <End Role="PhotoTag" EntitySet="PhotoTag" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="KartinaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Photo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Titre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="VendeurId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="PhotoTagList" Relationship="Self.FK_PhotoTag_Photo" FromRole="Photo" ToRole="PhotoTag" />
+          <NavigationProperty Name="Vendeur" Relationship="KartinaModel.FK_Photo_Vendeur" FromRole="Photo" ToRole="Vendeur" />
+        </EntityType>
+        <EntityType Name="PhotoTag">
+          <Key>
+            <PropertyRef Name="IDPhoto" />
+            <PropertyRef Name="IDTag" />
+          </Key>
+          <Property Name="IDPhoto" Type="Int32" Nullable="false" />
+          <Property Name="IDTag" Type="Int32" Nullable="false" />
+          <Property Name="DateCreation" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Photo" Relationship="Self.FK_PhotoTag_Photo" FromRole="PhotoTag" ToRole="Photo" />
+          <NavigationProperty Name="Tag" Relationship="Self.FK_PhotoTag_Tag" FromRole="PhotoTag" ToRole="Tag" />
+        </EntityType>
+        <EntityType Name="Tag">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Titre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="PhotoTagList" Relationship="Self.FK_PhotoTag_Tag" FromRole="Tag" ToRole="PhotoTag" />
+        </EntityType>
+        <Association Name="FK_PhotoTag_Photo">
+          <End Role="Photo" Type="Self.Photo" Multiplicity="1" />
+          <End Role="PhotoTag" Type="Self.PhotoTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Photo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PhotoTag">
+              <PropertyRef Name="IDPhoto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PhotoTag_Tag">
+          <End Role="Tag" Type="Self.Tag" Multiplicity="1" />
+          <End Role="PhotoTag" Type="Self.PhotoTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tag">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PhotoTag">
+              <PropertyRef Name="IDTag" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="KartinaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Photo" EntityType="Self.Photo" />
+          <EntitySet Name="PhotoTag" EntityType="Self.PhotoTag" />
+          <EntitySet Name="Tag" EntityType="Self.Tag" />
+          <AssociationSet Name="FK_PhotoTag_Photo" Association="Self.FK_PhotoTag_Photo">
+            <End Role="Photo" EntitySet="Photo" />
+            <End Role="PhotoTag" EntitySet="PhotoTag" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PhotoTag_Tag" Association="Self.FK_PhotoTag_Tag">
+            <End Role="Tag" EntitySet="Tag" />
+            <End Role="PhotoTag" EntitySet="PhotoTag" />
+          </AssociationSet>
+          <EntitySet Name="Vendeur" EntityType="KartinaModel.Vendeur" />
+          <AssociationSet Name="FK_Photo_Vendeur" Association="KartinaModel.FK_Photo_Vendeur">
+            <End Role="Vendeur" EntitySet="Vendeur" />
+            <End Role="Photo" EntitySet="Photo" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Vendeur">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PhotoList" Relationship="KartinaModel.FK_Photo_Vendeur" FromRole="Vendeur" ToRole="Photo" />
+        </EntityType>
+        <Association Name="FK_Photo_Vendeur">
+          <End Type="KartinaModel.Vendeur" Role="Vendeur" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="KartinaModel.Photo" Role="Photo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vendeur">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Photo">
+              <PropertyRef Name="VendeurId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="KartinaModelStoreContainer" CdmEntityContainer="KartinaEntities">
+          <EntitySetMapping Name="Photo">
+            <EntityTypeMapping TypeName="KartinaModel.Photo">
+              <MappingFragment StoreEntitySet="Photo">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Titre" ColumnName="Titre" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="VendeurId" ColumnName="IDVendeur" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PhotoTag">
+            <EntityTypeMapping TypeName="KartinaModel.PhotoTag">
+              <MappingFragment StoreEntitySet="PhotoTag">
+                <ScalarProperty Name="IDPhoto" ColumnName="IDPhoto" />
+                <ScalarProperty Name="IDTag" ColumnName="IDTag" />
+                <ScalarProperty Name="DateCreation" ColumnName="DateCreation" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tag">
+            <EntityTypeMapping TypeName="KartinaModel.Tag">
+              <MappingFragment StoreEntitySet="Tag">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Titre" ColumnName="Titre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vendeur">
+            <EntityTypeMapping TypeName="KartinaModel.Vendeur">
+              <MappingFragment StoreEntitySet="Vendeur">
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

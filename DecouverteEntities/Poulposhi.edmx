@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="PoulposhiEntities.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BasicAuthentications">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Login" Type="nvarchar(max)" />
+          <Property Name="PasswordKey" Type="nvarchar(max)" />
+          <Property Name="PlayerId" Type="int" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Octopuses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CurrentHealthPoint" Type="int" Nullable="false" />
+          <Property Name="MaxHealthPoint" Type="int" Nullable="false" />
+          <Property Name="CurrentFoodLevel" Type="int" Nullable="false" />
+          <Property Name="MaxFoodLevel" Type="int" Nullable="false" />
+          <Property Name="CurrentHygieneLevel" Type="int" Nullable="false" />
+          <Property Name="MaxHygieneLevel" Type="int" Nullable="false" />
+          <Property Name="PlayerId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Players">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="CoinValue" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_BasicAuthentications_Players_PlayerId">
+          <End Role="Players" Type="Self.Players" Multiplicity="0..1" />
+          <End Role="BasicAuthentications" Type="Self.BasicAuthentications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Players">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BasicAuthentications">
+              <PropertyRef Name="PlayerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Octopuses_Players_PlayerId">
+          <End Role="Players" Type="Self.Players" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Octopuses" Type="Self.Octopuses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Players">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Octopuses">
+              <PropertyRef Name="PlayerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PoulposhiEntitiesStoreContainer">
+          <EntitySet Name="BasicAuthentications" EntityType="Self.BasicAuthentications" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Octopuses" EntityType="Self.Octopuses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Players" EntityType="Self.Players" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BasicAuthentications_Players_PlayerId" Association="Self.FK_BasicAuthentications_Players_PlayerId">
+            <End Role="Players" EntitySet="Players" />
+            <End Role="BasicAuthentications" EntitySet="BasicAuthentications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Octopuses_Players_PlayerId" Association="Self.FK_Octopuses_Players_PlayerId">
+            <End Role="Players" EntitySet="Players" />
+            <End Role="Octopuses" EntitySet="Octopuses" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PoulposhiEntities" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BasicAuthentications">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Login" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PlayerId" Type="Int32" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Players" Relationship="Self.FK_BasicAuthentications_Players_PlayerId" FromRole="BasicAuthentications" ToRole="Players" />
+        </EntityType>
+        <EntityType Name="Octopuses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CurrentHealthPoint" Type="Int32" Nullable="false" />
+          <Property Name="MaxHealthPoint" Type="Int32" Nullable="false" />
+          <Property Name="CurrentFoodLevel" Type="Int32" Nullable="false" />
+          <Property Name="MaxFoodLevel" Type="Int32" Nullable="false" />
+          <Property Name="CurrentHygieneLevel" Type="Int32" Nullable="false" />
+          <Property Name="MaxHygieneLevel" Type="Int32" Nullable="false" />
+          <Property Name="PlayerId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Players" Relationship="Self.FK_Octopuses_Players_PlayerId" FromRole="Octopuses" ToRole="Players" />
+        </EntityType>
+        <EntityType Name="Players">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CoinValue" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="BasicAuthentications" Relationship="Self.FK_BasicAuthentications_Players_PlayerId" FromRole="Players" ToRole="BasicAuthentications" />
+          <NavigationProperty Name="Octopuses" Relationship="Self.FK_Octopuses_Players_PlayerId" FromRole="Players" ToRole="Octopuses" />
+        </EntityType>
+        <Association Name="FK_BasicAuthentications_Players_PlayerId">
+          <End Role="Players" Type="Self.Players" Multiplicity="0..1" />
+          <End Role="BasicAuthentications" Type="Self.BasicAuthentications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Players">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BasicAuthentications">
+              <PropertyRef Name="PlayerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Octopuses_Players_PlayerId">
+          <End Role="Players" Type="Self.Players" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Octopuses" Type="Self.Octopuses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Players">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Octopuses">
+              <PropertyRef Name="PlayerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ladiagonale_poulposhi_database_rec_version_devEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BasicAuthentications" EntityType="Self.BasicAuthentications" />
+          <EntitySet Name="Octopuses" EntityType="Self.Octopuses" />
+          <EntitySet Name="Players" EntityType="Self.Players" />
+          <AssociationSet Name="FK_BasicAuthentications_Players_PlayerId" Association="Self.FK_BasicAuthentications_Players_PlayerId">
+            <End Role="Players" EntitySet="Players" />
+            <End Role="BasicAuthentications" EntitySet="BasicAuthentications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Octopuses_Players_PlayerId" Association="Self.FK_Octopuses_Players_PlayerId">
+            <End Role="Players" EntitySet="Players" />
+            <End Role="Octopuses" EntitySet="Octopuses" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PoulposhiEntitiesStoreContainer" CdmEntityContainer="ladiagonale_poulposhi_database_rec_version_devEntities">
+          <EntitySetMapping Name="BasicAuthentications">
+            <EntityTypeMapping TypeName="PoulposhiEntities.BasicAuthentications">
+              <MappingFragment StoreEntitySet="BasicAuthentications">
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="PasswordKey" ColumnName="PasswordKey" />
+                <ScalarProperty Name="PlayerId" ColumnName="PlayerId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Octopuses">
+            <EntityTypeMapping TypeName="PoulposhiEntities.Octopuses">
+              <MappingFragment StoreEntitySet="Octopuses">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CurrentHealthPoint" ColumnName="CurrentHealthPoint" />
+                <ScalarProperty Name="MaxHealthPoint" ColumnName="MaxHealthPoint" />
+                <ScalarProperty Name="CurrentFoodLevel" ColumnName="CurrentFoodLevel" />
+                <ScalarProperty Name="MaxFoodLevel" ColumnName="MaxFoodLevel" />
+                <ScalarProperty Name="CurrentHygieneLevel" ColumnName="CurrentHygieneLevel" />
+                <ScalarProperty Name="MaxHygieneLevel" ColumnName="MaxHygieneLevel" />
+                <ScalarProperty Name="PlayerId" ColumnName="PlayerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Players">
+            <EntityTypeMapping TypeName="PoulposhiEntities.Players">
+              <MappingFragment StoreEntitySet="Players">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CoinValue" ColumnName="CoinValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
