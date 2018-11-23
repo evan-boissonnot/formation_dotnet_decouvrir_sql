@@ -21,8 +21,39 @@ namespace DecouverteSql.Toto
             AfficheLesVendeurs();
             InsererUneLigneDeVendeur();
             AfficheLesVendeurs();
+
+            Console.WriteLine("Un id de vendeur à modifier ?");
+            string idRenseigneParUser = Console.ReadLine();
+            ModifierUnVendeur(idRenseigneParUser);
+            AfficheLesVendeurs();
         }
 
+        static void ModifierUnVendeur(string idAModifier)
+        {
+            using (SqlConnection connection = new SqlConnection())
+            {
+                connection.ConnectionString = Properties.Settings.Default.MaChaineDeConnectionPourKartina;
+                connection.Open();
+
+                using (SqlCommand command = connection.CreateCommand())
+                {
+                    Console.WriteLine("Le prenom s'il te plait");
+                    string prenomVendeur = Console.ReadLine();
+
+                    Console.WriteLine("Le nom s'il te plait");
+                    string nomVendeur = Console.ReadLine();
+
+                    string sql = "UPDATE Vendeur" +
+                        "   SET FirstName = '" + prenomVendeur + "'" +
+                        "      ,LastName = '" + nomVendeur + "' " +
+                        "WHERE" +
+                        "    Id = " + idAModifier;
+
+                    command.CommandText = sql;
+                    int resultat = command.ExecuteNonQuery();
+                }
+            }
+        }
 
         static void InsererUneLigneDeVendeur()
         {
@@ -33,16 +64,19 @@ namespace DecouverteSql.Toto
 
                 using (SqlCommand command = connection.CreateCommand())
                 {
+                    Console.WriteLine("Le prenom s'il te plait");
                     string prenomVendeur = Console.ReadLine();
 
+                    Console.WriteLine("Le nom s'il te plait");
+                    string nomVendeur = Console.ReadLine();
 
                     string sql = "INSERT INTO Vendeur" +
-                        "           (FirstName)" +
+                        "           (FirstName, LastName)" +
                         "     VALUES" +
-                        "           ('" + prenomVendeur + "')";
+                        "           ('" + prenomVendeur + "', '" + nomVendeur + "')";
 
                     command.CommandText = sql;
-                    command.ExecuteNonQuery();
+                    int resultat = command.ExecuteNonQuery();
                 }
             }
         }
