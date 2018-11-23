@@ -30,32 +30,15 @@ namespace DecouverteSql.Toto
 
         static void ModifierUnVendeur(string idAModifier)
         {
-            using (SqlConnection connection = new SqlConnection())
-            {
-                connection.ConnectionString = Properties.Settings.Default.MaChaineDeConnectionPourKartina;
-                connection.Open();
-
-                using (SqlCommand command = connection.CreateCommand())
-                {
-                    Console.WriteLine("Le prenom s'il te plait");
-                    string prenomVendeur = Console.ReadLine();
-
-                    Console.WriteLine("Le nom s'il te plait");
-                    string nomVendeur = Console.ReadLine();
-
-                    string sql = "UPDATE Vendeur" +
-                        "   SET FirstName = '" + prenomVendeur + "'" +
-                        "      ,LastName = '" + nomVendeur + "' " +
+            string sql = "UPDATE Vendeur" +
+                        "   SET FirstName = '{0}'" +
+                        "      ,LastName = '{1}' " +
                         "WHERE" +
                         "    Id = " + idAModifier;
-
-                    command.CommandText = sql;
-                    int resultat = command.ExecuteNonQuery();
-                }
-            }
+            ExecuterChangementsVersTableVendeur(sql);
         }
 
-        static void InsererUneLigneDeVendeur()
+        static void ExecuterChangementsVersTableVendeur(string patternSql)
         {
             using (SqlConnection connection = new SqlConnection())
             {
@@ -70,15 +53,21 @@ namespace DecouverteSql.Toto
                     Console.WriteLine("Le nom s'il te plait");
                     string nomVendeur = Console.ReadLine();
 
-                    string sql = "INSERT INTO Vendeur" +
-                        "           (FirstName, LastName)" +
-                        "     VALUES" +
-                        "           ('" + prenomVendeur + "', '" + nomVendeur + "')";
-
+                    string sql = string.Format(patternSql, prenomVendeur, nomVendeur);
+                    
                     command.CommandText = sql;
                     int resultat = command.ExecuteNonQuery();
                 }
             }
+        }
+
+        static void InsererUneLigneDeVendeur()
+        {
+            string sql = "INSERT INTO Vendeur" +
+                        "           (FirstName, LastName)" +
+                        "     VALUES" +
+                        "           ('{0}', '{1}')";
+            ExecuterChangementsVersTableVendeur(sql);
         }
 
         /// <summary>
